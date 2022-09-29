@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMonsterStore, type MonsterListEntry } from "@/stores/monster";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { API_URL } from "@/constants";
 import { useArrayFilter } from "@vueuse/core";
 
@@ -11,6 +11,19 @@ const filteredMonsters = useArrayFilter(monsterStore.monsters, (monster) => {
   const monstername = monster.name.toLocaleLowerCase().trim();
   const criteria = searchCriteria.value.toLocaleLowerCase().trim();
   return monstername.includes(criteria);
+});
+
+const monsterLimit = 15;
+const limitedMonsters = computed(() => {
+  const monsters: MonsterListEntry[] = [];
+  for (let i = 0; i < filteredMonsters.value.length; i++) {
+    if (i >= monsterLimit) {
+      break;
+    }
+    const monster = filteredMonsters.value[i];
+    monsters.push(monster);
+  }
+  return monsters;
 });
 
 async function fillMonsterStore() {
@@ -31,17 +44,28 @@ onMounted(async () => {
 
 <template>
   <h2>Generate Minion</h2>
-  <div>
+  <div class="monster-selector">
     <input
       type="text"
       v-model="searchCriteria"
       placeholder="Search monster ..."
+      class="monster-selector-input"
     />
-    <div v-for="monster in filteredMonsters" :key="monster.index">
+    <div
+      class="monster-selector-preview"
+      v-for="monster in limitedMonsters"
+      :key="monster.index"
+    >
       {{ monster.name }}
     </div>
-    <div v-if="searchCriteria && !filteredMonsters.length">
+    <div
+      class="monster-selector-error"
+      v-if="searchCriteria && !limitedMonsters.length"
+    >
       <p>No monsters found! 😨</p>
+    </div>
+    <div v-else>
+      <p>...</p>
     </div>
   </div>
 </template>
