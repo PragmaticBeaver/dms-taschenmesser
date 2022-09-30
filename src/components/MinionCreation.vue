@@ -1,32 +1,14 @@
 <script setup lang="ts">
 import { useMonsterStore, type MonsterListEntry } from "@/stores/monster";
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { API_URL } from "@/constants";
-import { useArrayFilter } from "@vueuse/core";
+import MinionSearchInput from "./MinionSearchInput.vue";
+import MinionBuilder from "./MinionBuilder.vue";
 
 const monsterStore = useMonsterStore();
-const searchCriteria = ref("");
+const selectedMonsterIdx = ref("");
 
-const filteredMonsters = useArrayFilter(monsterStore.monsters, (monster) => {
-  const monstername = monster.name.toLocaleLowerCase().trim();
-  const criteria = searchCriteria.value.toLocaleLowerCase().trim();
-  return monstername.includes(criteria);
-});
-
-const monsterLimit = 15;
-const limitedMonsters = computed(() => {
-  const monsters: MonsterListEntry[] = [];
-  for (let i = 0; i < filteredMonsters.value.length; i++) {
-    if (i >= monsterLimit) {
-      break;
-    }
-    const monster = filteredMonsters.value[i];
-    monsters.push(monster);
-  }
-  return monsters;
-});
-
-async function fillMonsterStore() {
+async function fillMonsterStore(): Promise<void> {
   const url = `${API_URL}/monsters`;
   const response = await fetch(url, { method: "get" });
   const data = (await response.json()) as {
@@ -34,6 +16,10 @@ async function fillMonsterStore() {
     results: MonsterListEntry[];
   };
   monsterStore.addMonsters(data.results);
+}
+
+function onSelectedMonster(index: string): void {
+  selectedMonsterIdx.value = index;
 }
 
 onMounted(async () => {
@@ -44,30 +30,12 @@ onMounted(async () => {
 
 <template>
   <h2>Generate Minion</h2>
-  <div class="monster-selector">
-    <input
-      type="text"
-      v-model="searchCriteria"
-      placeholder="Search monster ..."
-      class="monster-selector-input"
-    />
-    <div
-      class="monster-selector-preview"
-      v-for="monster in limitedMonsters"
-      :key="monster.index"
-    >
-      {{ monster.name }}
-    </div>
-    <div
-      class="monster-selector-error"
-      v-if="searchCriteria && !limitedMonsters.length"
-    >
-      <p>No monsters found! 😨</p>
-    </div>
-    <div v-else>
-      <p>...</p>
-    </div>
-  </div>
+  <MinionSearchInput
+    :monsters="monsterStore.monsters"
+    @select-monster="onSelectedMonster"
+    v-if="!selectedMonsterIdx"
+  />
+  <MinionBuilder v-else />
 </template>
 
 <style></style>
