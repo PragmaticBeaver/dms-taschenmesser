@@ -4,12 +4,13 @@ import { onMounted, ref } from "vue";
 import { API_URL } from "@/constants";
 import MinionSearchInput from "./MinionSearchInput.vue";
 import MinionBuilder from "./MinionBuilder.vue";
+import type { MonsterDto } from "@/logic/monsterDto";
 
 const monsterStore = useMonsterStore();
-const selectedMonsterIdx = ref("");
+const selectedMonster = ref<MonsterDto>();
 
 async function fillMonsterStore(): Promise<void> {
-  const url = `${API_URL}/monsters`;
+  const url = `${API_URL}/api/monsters`;
   const response = await fetch(url, { method: "get" });
   const data = (await response.json()) as {
     count: number;
@@ -18,12 +19,21 @@ async function fillMonsterStore(): Promise<void> {
   monsterStore.addMonsters(data.results);
 }
 
-function onSelectedMonster(index: string): void {
-  selectedMonsterIdx.value = index;
+async function onSelectedMonster(index: string): Promise<void> {
+  const monster = monsterStore.monsters.find((monster) => {
+    return monster.index === index;
+  });
+  if (!monster) {
+    return;
+  }
+
+  const url = `${API_URL}${monster.url}`;
+  const response = await fetch(url, { method: "get" });
+  const data = (await response.json()) as MonsterDto;
+  selectedMonster.value = data;
 }
 
 onMounted(async () => {
-  // todo extract from view layer into logic layer
   await fillMonsterStore();
 });
 </script>
@@ -33,7 +43,7 @@ onMounted(async () => {
   <MinionSearchInput
     :monsters="monsterStore.monsters"
     @select-monster="onSelectedMonster"
-    v-if="!selectedMonsterIdx"
+    v-if="!selectedMonster"
   />
   <MinionBuilder v-else />
 </template>
