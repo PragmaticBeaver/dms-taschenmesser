@@ -1,8 +1,8 @@
 {
   "0": {"profBonus": 2, "hitPoints": 4, "damage": 1},
-  "1/8": {"profBonus": 2, "hitPoints": 5, "damage": 1},
-  "1/4": {"profBonus": 2, "hitPoints": 6, "damage": 1},
-  "1/2": {"profBonus": 2, "hitPoints": 8, "damage": 1},
+  "0.125": {"profBonus": 2, "hitPoints": 5, "damage": 1},
+  "0.25": {"profBonus": 2, "hitPoints": 6, "damage": 1},
+  "0.5": {"profBonus": 2, "hitPoints": 8, "damage": 1},
   "1": {"profBonus": 2, "hitPoints": 10, "damage": 2},
   "2": {"profBonus": 2, "hitPoints": 12, "damage": 3},
   "3": {"profBonus": 2, "hitPoints": 14, "damage": 4},

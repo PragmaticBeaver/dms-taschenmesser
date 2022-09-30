@@ -45,7 +45,7 @@ onMounted(async () => {
     @select-monster="onSelectedMonster"
     v-if="!selectedMonster"
   />
-  <MinionBuilder v-else />
+  <MinionBuilder :monster="selectedMonster" v-else />
 </template>
 
 <style></style>
