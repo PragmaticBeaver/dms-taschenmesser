@@ -2,8 +2,8 @@
 import { useMonsterStore, type MonsterListEntry } from "@/stores/monster";
 import { onMounted, ref } from "vue";
 import { API_URL } from "@/constants";
-import MinionSearchInput from "./MinionSearchInput.vue";
-import MinionBuilder from "./MinionBuilder.vue";
+import MinionSearchInput from "@/components/MinionSearchInput.vue";
+import MinionBuilder from "@/components/MinionBuilder.vue";
 import type { MonsterDto } from "@/logic/monsterDto";
 
 const monsterStore = useMonsterStore();

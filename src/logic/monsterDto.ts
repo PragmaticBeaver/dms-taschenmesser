@@ -142,4 +142,6 @@ export interface Speed {
   walk: string;
   climb: string;
   fly: string;
+  burrow: string;
+  swim: string;
 }

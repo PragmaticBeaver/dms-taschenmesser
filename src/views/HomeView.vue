@@ -1,9 +1,5 @@
-<script setup lang="ts">
-import MinionCreation from "../components/MinionCreation.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <main>
-    <MinionCreation />
-  </main>
+  <main></main>
 </template>

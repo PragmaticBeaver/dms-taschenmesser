@@ -16,6 +16,15 @@ function convertMonster(monster: MonsterDto): void {
   const xp = partialXp < 0 ? 0 : partialXp;
 
   minion.value = {
+    armorClass: monster.armor_class,
+    attributes: {
+      STR: monster.strength,
+      DEX: monster.dexterity,
+      CON: monster.constitution,
+      INT: monster.intelligence,
+      WIS: monster.wisdom,
+      CHA: monster.charisma,
+    },
     alignment: monster.alignment,
     challengeRating: monster.challenge_rating,
     damage: conversion.damage,
@@ -23,6 +32,7 @@ function convertMonster(monster: MonsterDto): void {
     name: `${monster.name} Minion`,
     proficiencyBonus: conversion.profBonus,
     size: monster.size,
+    speed: monster.speed,
     type: monster.type,
     xp,
   };
@@ -71,9 +81,10 @@ onMounted(() => convertMonster(props.monster));
       </div>
     </div>
 
+    <!-- Base stats -->
     <div>
-      <b>Proficiency Bonus</b>
-      <p>{{ minion.proficiencyBonus }}</p>
+      <b>Armor Class</b>
+      <p>{{ minion.armorClass }}</p>
     </div>
 
     <div>
@@ -82,8 +93,25 @@ onMounted(() => convertMonster(props.monster));
     </div>
 
     <div>
+      <b>Speed</b>
+      <p>{{ minion.speed }}</p>
+    </div>
+
+    <!-- Attributes -->
+    <div>
+      <b>Attributes</b>
+      <p>{{ minion.attributes }}</p>
+    </div>
+
+    <!--  -->
+    <div>
       <b>Damage</b>
       <p>{{ minion.damage }}</p>
+    </div>
+
+    <div>
+      <b>Proficiency Bonus</b>
+      <p>{{ minion.proficiencyBonus }}</p>
     </div>
   </div>
 
